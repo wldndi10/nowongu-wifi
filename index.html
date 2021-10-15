@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>여러개 마커에 이벤트 등록하기1</title>
+    
+</head>
+<body>
+<div id="map" style="width:100%;height:350px;"></div>
+
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=발급받은 APP KEY를 사용하세요"></script>
+<script>
+var mapContainer = document.getElementById('map'), // 지도를 표시할 div  
+    mapOption = { 
+        center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+        level: 3 // 지도의 확대 레벨
+    };
+
+var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+ 
+// 마커를 표시할 위치와 내용을 가지고 있는 객체 배열입니다 
+var positions = [
+    {
+content: '<div>경춘선숲길.화랑대역공원</div>',
+latlng: new kakao.maps.LatLng(37.623535,127.09026)
+},
+{
+content: '<div>골마을근린공원</div>',
+latlng: new kakao.maps.LatLng(37.638367,127.07442)
+},
+{
+content: '<div>공릉대동2차아파트</div>',
+latlng: new kakao.maps.LatLng(37.626896,127.07084)
+},
+{
+content: '<div>공릉시장</div>',
+latlng: new kakao.maps.LatLng(37.62274,127.07418)
+},
+{
+content: '<div>공릉시장</div>',
+latlng: new kakao.maps.LatLng(37.623116,127.07362)
+},
+{
+content: '<div>공릉역1번출구</div>',
+latlng: new kakao.maps.LatLng(37.62658,127.072784)
+},
+{
+content: '<div>공릉역4번출구</div>',
+latlng: new kakao.maps.LatLng(37.626358,127.07242)
+},
+{
+content: '<div>광운대학교</div>',
+latlng: new kakao.maps.LatLng(37.619843,127.05814)
+},
+{
+content: '<div>노원고등학교</div>',
+latlng: new kakao.maps.LatLng(37.66132,127.054535)
+},
+{
+content: '<div>노원문화예술회관.불암초등학교</div>',
+latlng: new kakao.maps.LatLng(37.650047,127.08092)
+},
+{
+content: '<div>노원문화원</div>',
+latlng: new kakao.maps.LatLng(37.628376,127.06995)
+},
+{
+content: '<div>노원문화원</div>',
+latlng: new kakao.maps.LatLng(37.628613,127.06983)
+},
+{
+content: '<div>대림벽산아파트</div>',
+latlng: new kakao.maps.LatLng(37.6473,127.07678)
+},
+{
+content: '<div>대진고등학교</div>',
+latlng: new kakao.maps.LatLng(37.637936,127.07365)
+},
+{
+content: '<div>롯데우성아파트</div>',
+latlng: new kakao.maps.LatLng(37.647476,127.074)
+},
+{
+content: '<div>삼육대앞</div>',
+latlng: new kakao.maps.LatLng(37.638416,127.10844)
+},
+{
+content: '<div>삼육대앞</div>',
+latlng: new kakao.maps.LatLng(37.63878,127.1083)
+},
+{
+content: '<div>삼익선경아파트후문.시립과학관</div>',
+latlng: new kakao.maps.LatLng(37.639378,127.07615)
+},
+{
+content: '<div>상계10동우체국</div>',
+latlng: new kakao.maps.LatLng(37.660732,127.06282)
+},
+{
+content: '<div>상계119안전센터</div>',
+latlng: new kakao.maps.LatLng(37.6539,127.07178)
+},
+{
+content: '<div>상계동주유소</div>',
+latlng: new kakao.maps.LatLng(37.65752,127.071625)
+},
+{
+content: '<div>상계주공10단지</div>',
+latlng: new kakao.maps.LatLng(37.662144,127.05822)
+},
+{
+content: '<div>상계주공14단지</div>',
+latlng: new kakao.maps.LatLng(37.6691,127.05683)
+},
+{
+content: '<div>상계주공7단지.광림교회앞</div>',
+latlng: new kakao.maps.LatLng(37.660496,127.06278)
+},
+{
+content: '<div>상계중학교정문</div>',
+latlng: new kakao.maps.LatLng(37.652454,127.06818)
+},
+{
+content: '<div>상명고등학교</div>',
+latlng: new kakao.maps.LatLng(37.649483,127.06907)
+},
+{
+content: '<div>상명고등학교.성원아파트</div>',
+latlng: new kakao.maps.LatLng(37.649776,127.06923)
+},
+{
+content: '<div>서울과학기술대앞</div>',
+latlng: new kakao.maps.LatLng(37.630558,127.07608)
+},
+{
+content: '<div>서울과학기술대입구</div>',
+latlng: new kakao.maps.LatLng(37.628475,127.0718)
+},
+{
+content: '<div>서울아이티고등학교</div>',
+latlng: new kakao.maps.LatLng(37.642376,127.06252)
+},
+{
+content: '<div>서울아이티고등학교</div>',
+latlng: new kakao.maps.LatLng(37.641697,127.0631)
+},
+{
+content: '<div>서울여대.육군사관학교행정안내소</div>',
+latlng: new kakao.maps.LatLng(37.626007,127.09497)
+},
+{
+content: '<div>수락리버시티3.4단지</div>',
+latlng: new kakao.maps.LatLng(37.68718,127.052605)
+},
+{
+content: '<div>수락리버시티아파트</div>',
+latlng: new kakao.maps.LatLng(37.68901,127.05565)
+},
+{
+content: '<div>수락중고등학교</div>',
+latlng: new kakao.maps.LatLng(37.68284,127.05527)
+},
+{
+content: '<div>수락중고등학교</div>',
+latlng: new kakao.maps.LatLng(37.682896,127.055664)
+},
+{
+content: '<div>신창중학교후문</div>',
+latlng: new kakao.maps.LatLng(37.627644,127.047485)
+},
+{
+content: '<div>양지근린공원</div>',
+latlng: new kakao.maps.LatLng(37.647236,127.07641)
+},
+{
+content: '<div>영신여자고등학교입구</div>',
+latlng: new kakao.maps.LatLng(37.649284,127.08106)
+},
+{
+content: '<div>예수사랑교회</div>',
+latlng: new kakao.maps.LatLng(37.622303,127.08718)
+},
+{
+content: '<div>온곡중학교노원정보도서관</div>',
+latlng: new kakao.maps.LatLng(37.659588,127.06453)
+},
+{
+content: '<div>용동초등학교</div>',
+latlng: new kakao.maps.LatLng(37.642117,127.06913)
+},
+{
+content: '<div>용원초등학교</div>',
+latlng: new kakao.maps.LatLng(37.628742,127.06863)
+},
+{
+content: '<div>우방아파트</div>',
+latlng: new kakao.maps.LatLng(37.626095,127.08604)
+},
+{
+content: '<div>월계미륭아파트</div>',
+latlng: new kakao.maps.LatLng(37.623383,127.06863)
+},
+{
+content: '<div>월계미성아파트</div>',
+latlng: new kakao.maps.LatLng(37.621468,127.06916)
+},
+{
+content: '<div>월계삼호4차아파트</div>',
+latlng: new kakao.maps.LatLng(37.626663,127.06598)
+},
+{
+content: '<div>월계삼호아파트</div>',
+latlng: new kakao.maps.LatLng(37.62532,127.06753)
+},
+{
+content: '<div>월계현대아파트</div>',
+latlng: new kakao.maps.LatLng(37.619656,127.06348)
+},
+{
+content: '<div>월계현대아파트</div>',
+latlng: new kakao.maps.LatLng(37.619484,127.06329)
+},
+{
+content: '<div>은빛아파트2단지</div>',
+latlng: new kakao.maps.LatLng(37.68021,127.055275)
+},
+{
+content: '<div>중계1동신안아파트</div>',
+latlng: new kakao.maps.LatLng(37.651253,127.0724)
+},
+{
+content: '<div>중계3단지목련아파트</div>',
+latlng: new kakao.maps.LatLng(37.6475,127.06797)
+},
+{
+content: '<div>중계건영2차아파트</div>',
+latlng: new kakao.maps.LatLng(37.646095,127.0654)
+},
+{
+content: '<div>중계목화아파트4단지</div>',
+latlng: new kakao.maps.LatLng(37.64353,127.0714)
+},
+{
+content: '<div>중계주공4단지</div>',
+latlng: new kakao.maps.LatLng(37.654156,127.07837)
+},
+{
+content: '<div>중계주공5단지514동</div>',
+latlng: new kakao.maps.LatLng(37.65081,127.074936)
+},
+{
+content: '<div>중계주공9단지후문</div>',
+latlng: new kakao.maps.LatLng(37.64355,127.07661)
+},
+{
+content: '<div>중계주공9단지후문</div>',
+latlng: new kakao.maps.LatLng(37.643547,127.07625)
+},
+{
+content: '<div>중앙하이츠2차아파트</div>',
+latlng: new kakao.maps.LatLng(37.654358,127.06762)
+},
+{
+content: '<div>중평초등학교</div>',
+latlng: new kakao.maps.LatLng(37.63629,127.065506)
+},
+{
+content: '<div>청솔아파트</div>',
+latlng: new kakao.maps.LatLng(37.623135,127.08648)
+},
+{
+content: '<div>태릉국제사격장</div>',
+latlng: new kakao.maps.LatLng(37.627647,127.096275)
+},
+{
+content: '<div>태릉선수촌</div>',
+latlng: new kakao.maps.LatLng(37.6333,127.10327)
+},
+{
+content: '<div>태릉입구역3번출구</div>',
+latlng: new kakao.maps.LatLng(37.619427,127.074844)
+},
+{
+content: '<div>태릉입구역4번출구</div>',
+latlng: new kakao.maps.LatLng(37.61959,127.0752)
+},
+{
+content: '<div>태릉입구역7번출구</div>',
+latlng: new kakao.maps.LatLng(37.6178,127.0765)
+},
+{
+content: '<div>하계1치안센터</div>',
+latlng: new kakao.maps.LatLng(37.632954,127.072464)
+},
+{
+content: '<div>하계1치안센터</div>',
+latlng: new kakao.maps.LatLng(37.63295,127.072266)
+},
+{
+content: '<div>하계시영아파트</div>',
+latlng: new kakao.maps.LatLng(37.633984,127.06557)
+},
+{
+content: '<div>하계현대아파트</div>',
+latlng: new kakao.maps.LatLng(37.64496,127.07115)
+},
+{
+content: '<div>한국스포츠정책과학원</div>',
+latlng: new kakao.maps.LatLng(37.635292,127.10548)
+},
+{
+content: '<div>한성여객종점</div>',
+latlng: new kakao.maps.LatLng(37.63727,127.070816)
+},
+{
+content: '<div>한진한화그랑빌아파트</div>',
+latlng: new kakao.maps.LatLng(37.615807,127.06923)
+},
+{
+content: '<div>한천중학교</div>',
+latlng: new kakao.maps.LatLng(37.630943,127.07344)
+},
+{
+content: '<div>한천초등학교</div>',
+latlng: new kakao.maps.LatLng(37.619987,127.06997)
+},
+{
+content: '<div>홈플러스중계점</div>',
+latlng: new kakao.maps.LatLng(37.640724,127.06863)
+},
+{
+content: '<div>홍파복지원미주아파트</div>',
+latlng: new kakao.maps.LatLng(37.679832,127.05565)
+},
+{
+content: '<div>화랑대사거리</div>',
+latlng: new kakao.maps.LatLng(37.62185,127.08837)
+},
+{
+content: '<div>화랑대사거리</div>',
+latlng: new kakao.maps.LatLng(37.622166,127.08836)
+},
+{
+content: '<div>효성화운트빌원자력병원후문</div>',
+latlng: new kakao.maps.LatLng(37.62746,127.08512)
+},
+{
+content: '<div>흥안운수종점</div>',
+latlng: new kakao.maps.LatLng(37.66983,127.08072)
+},
+{
+content: '<div>화랑대역1번출구</div>',
+latlng: new kakao.maps.LatLng(37.61978,127.08328)
+},
+{
+content: '<div>서울과학기술대앞</div>',
+latlng: new kakao.maps.LatLng(37.63027,127.07602)
+},
+{
+content: '<div>효성화운트빌</div>',
+latlng: new kakao.maps.LatLng(37.628265,127.08504)
+},
+{
+content: '<div>화랑타운아파트</div>',
+latlng: new kakao.maps.LatLng(37.623608,127.08675)
+},
+{
+content: '<div>화랑대역2번출구</div>',
+latlng: new kakao.maps.LatLng(37.62022,127.08359)
+},
+{
+content: '<div>태릉국제사격장</div>',
+latlng: new kakao.maps.LatLng(37.628193,127.09618)
+},
+{
+content: '<div>한국스포츠정책과학원</div>',
+latlng: new kakao.maps.LatLng(37.635593,127.10628)
+},
+{
+content: '<div>담터고개</div>',
+latlng: new kakao.maps.LatLng(37.64084,127.11129)
+},
+{
+content: '<div>공연초등학교</div>',
+latlng: new kakao.maps.LatLng(37.626724,127.07554)
+},
+{
+content: '<div>청원고등학교</div>',
+latlng: new kakao.maps.LatLng(37.66505,127.06172)
+},
+{
+content: '<div>수락리버시티아파트</div>',
+latlng: new kakao.maps.LatLng(37.68933,127.05521)
+},
+{
+content: '<div>롯데백화점노원점</div>',
+latlng: new kakao.maps.LatLng(37.65487,127.06254)
+},
+{
+content: '<div>상계119안전센터</div>',
+latlng: new kakao.maps.LatLng(37.65396,127.071495)
+},
+{
+content: '<div>벽산아파트103동</div>',
+latlng: new kakao.maps.LatLng(37.660706,127.071815)
+},
+{
+content: '<div>상계주공2단지</div>',
+latlng: new kakao.maps.LatLng(37.651108,127.06042)
+},
+{
+content: '<div>상계중학교</div>',
+latlng: new kakao.maps.LatLng(37.652355,127.06782)
+},
+{
+content: '<div>상경초등학교</div>',
+latlng: new kakao.maps.LatLng(37.67083,127.051834)
+}
+];
+
+for (var i = 0; i < positions.length; i ++) {
+    // 마커를 생성합니다
+    var marker = new kakao.maps.Marker({
+        map: map, // 마커를 표시할 지도
+        position: positions[i].latlng // 마커의 위치
+    });
+
+    // 마커에 표시할 인포윈도우를 생성합니다 
+    var infowindow = new kakao.maps.InfoWindow({
+        content: positions[i].content // 인포윈도우에 표시할 내용
+    });
+
+    // 마커에 mouseover 이벤트와 mouseout 이벤트를 등록합니다
+    // 이벤트 리스너로는 클로저를 만들어 등록합니다 
+    // for문에서 클로저를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
+    kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
+    kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
+}
+
+// 인포윈도우를 표시하는 클로저를 만드는 함수입니다 
+function makeOverListener(map, marker, infowindow) {
+    return function() {
+        infowindow.open(map, marker);
+    };
+}
+
+// 인포윈도우를 닫는 클로저를 만드는 함수입니다 
+function makeOutListener(infowindow) {
+    return function() {
+        infowindow.close();
+    };
+}
+
+/* 아래와 같이도 할 수 있습니다 */
+/*
+for (var i = 0; i < positions.length; i ++) {
+    // 마커를 생성합니다
+    var marker = new kakao.maps.Marker({
+        map: map, // 마커를 표시할 지도
+        position: positions[i].latlng // 마커의 위치
+    });
+
+    // 마커에 표시할 인포윈도우를 생성합니다 
+    var infowindow = new kakao.maps.InfoWindow({
+        content: positions[i].content // 인포윈도우에 표시할 내용
+    });
+
+    // 마커에 이벤트를 등록하는 함수 만들고 즉시 호출하여 클로저를 만듭니다
+    // 클로저를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
+    (function(marker, infowindow) {
+        // 마커에 mouseover 이벤트를 등록하고 마우스 오버 시 인포윈도우를 표시합니다 
+        kakao.maps.event.addListener(marker, 'mouseover', function() {
+            infowindow.open(map, marker);
+        });
+
+        // 마커에 mouseout 이벤트를 등록하고 마우스 아웃 시 인포윈도우를 닫습니다
+        kakao.maps.event.addListener(marker, 'mouseout', function() {
+            infowindow.close();
+        });
+    })(marker, infowindow);
+}
+*/
+</script>
+</body>
+</html>
